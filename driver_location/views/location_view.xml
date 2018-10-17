@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        
+        <record id="view_bat_driver_tree" model="ir.ui.view">
+            <field name="name">driver.location.tree</field>
+            <field name="model">driver.location</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Student">
+                        <field name="task_id"/>
+                        <field name="emp_id"/>
+                        <field name="date_time"/>
+                        <field name="lon"/>
+                        <field name="lat"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bat_driver_form" model="ir.ui.view">
+            <field name="name">driver.location.form</field>
+            <field name="model">driver.location</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Driver Details">
+                    <group>
+                        <field name="task_id"/>
+                        <field name="emp_id"/>
+                        <field name="date_time"/>
+                        <field name="lon"/>
+                        <field name="lat"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bat_driver_map" model="ir.ui.view">
+            <field name="name">driver.location.map</field>
+            <field name="model">driver.location</field>
+            <field name="type">map</field>
+            <field name="arch" type="xml">
+                <map string="Maps" class="o_res_partner_map" library="geometry" lat="lat" lng="lon" color="blue">
+                    <field name="lat"/>
+                    <field name="lon"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div class="oe_kanban_global_click o_res_partner_kanban">
+                                    <div class="o_kanban_image">
+                                        <t t-if="record.image_small">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', record.id)"/>
+                                        </t>
+                                    </div>
+                                    <div class="oe_kanban_details">
+                                        <strong class="oe_emp_id_heading">
+                                             <field name="emp_id"/>
+                                        </strong>
+                                        <ul>
+                                            <li t-if="record.task_id">
+                                                <field name="task_id"/>
+                                            </li>
+                                            <li t-if="record.date_time">
+                                                <field name="date_time"/>
+                                            </li>
+                                            <li t-if="record.lon">
+                                                <field name="lon"/>
+                                            </li>
+                                            <li t-if="record.lat">
+                                                <field name="lat"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                            </t>
+                        </templates>
+                </map>
+            </field>
+        </record>
+
+        <record id="act_driver_profile_view" model="ir.ui.view">
+            <field name="name">inherit.res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Document">
+                        <group>
+                            <field name="document"/>
+                        </group>
+                    </page>
+                    <page string="Tasks">
+                        <group>
+                            <field name="tasks"/>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="act_driver_profile_tree_view" model="ir.ui.view">
+            <field name="name">inherit.res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Driver profile Details">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+            
+        <record model="ir.actions.act_window" id="act_bat_driver_view">
+            <field name="name">Driver Location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">driver.location</field>
+            <!--<field name="auto_refresh">10</field>-->
+            <field name="view_type">form</field>
+            <field name="limit">10000</field>
+            <field name="view_mode">map,form,tree</field>
+            <!-- <field name="search_view_id" ref="view_bat_student_search"/>-->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_driver_pro_view">
+            <field name="name">Driver Profiles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_bat_driver_view_form">
+            <field name="act_window_id" ref="act_bat_driver_view"/>
+            <field name="sequence" eval="30"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bat_driver_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_bat_driver_view_tree">
+            <field name="act_window_id" ref="act_bat_driver_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_bat_driver_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_bat_driver_view_map">
+            <field name="act_window_id" ref="act_bat_driver_view"/>
+            <field name="view_mode">map</field>
+            <field name="sequence" eval="20"/>
+            <field name="view_id" ref="view_bat_driver_map"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_bat_driver_pro_view">
+            <field name="act_window_id" ref="act_driver_pro_view"/>
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="2"/>
+            <field name="view_id" ref="act_driver_profile_view"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_bat_driver_pro_tree_view">
+            <field name="act_window_id" ref="act_driver_pro_view"/>
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_id" ref="act_driver_profile_tree_view"/>
+        </record>
+
+
+        <menuitem id="driver_form_menu" name="Driver Form"
+            action="act_bat_driver_view" />
+
+        <menuitem id="dashboard_form_menu" name="Dashboard"
+            sequence="30" parent='driver_form_menu'
+            action="act_bat_driver_view" />
+
+        <menuitem id="driver_profile_menu" name="Driver Profiles"
+            parent="dashboard_form_menu" action="act_driver_pro_view"
+            sequence="10"/>
+
+</odoo>
+
